@@ -1,6 +1,7 @@
 \documentclass[12pt, a4paper]{article}
 \usepackage{sectsty}
 \sectionfont{\fontsize{12}{15}\selectfont}
+\subsectionfont{\fontsize{10}{12}\selectfont}
 \begin{document}
 \title{"Planning and Heuristic Search" \\ Oral Pre-Exam Questions (WS 2018/19)}
 \date{}
@@ -11,11 +12,13 @@ Nodes represent states of a given problem (e.g. board configurations in the 8-pu
 
 
 \section{What is a solution path in an OR-graph?}
-
+A path \textit{P} in a state-space graph \textit{G} from node \textit{n} to goal node $\gamma$ in \textit{G}, satisfying given solution constraint,  is called a \textit{solution path} for \textit{n}. 
+\subsection*{What is a solution base?}
+A path \textit{P} in \textit{G} from \textit{n} to some node \textit{n'} is called \textit{solution base} for \textit{n}.
 
 
 \section{What are constraint satisfaction problems? What are optimization problems?}
-
+Constraint satisfaction problems are problems where a solution has to fulfill certain constraints and shall be found with minimum search effort. Optimization problems have to find a solution that in addition to the satisfication of constraints also has to stand out amongst all other solutions with respect to a special property.
 
 
 \section{What is an appropriate representation for infinite graphs?}
@@ -23,6 +26,15 @@ The implicit representation is appropriate for infinite graphs as it uses the co
 
 
 \section{What is node expansion?}
+Applying the function \textit{successors(n)} on a node \textit{n} and thereby creating all direct successors of this node in \textbf{one time step} is called \textit{node expansion}. (All algorithms we considered use node expansion as a basic step, except for the backtracking algorithm)
+\subsection*{What is node generation?}
+Applying the function \textit{next\_successor(n)} on a node \textit{n} and thereby creating an unseen direct successor (one at a time) is called \textit{node generation}.
+\subsection*{What are the states of nodes?} \begin{itemize}
+\item generated (living on OPEN)
+\item explored (neither on OPEN or CLOSED in A*, since it means \textit{next\_succesor} was applied and there is still at least one unseen node which will be returned by the next call of \textit{next\_succesor}.)
+\item expanded (living on CLOSED, except for reopening in A*)
+\item unseen
+\end{itemize}
 
 
 
