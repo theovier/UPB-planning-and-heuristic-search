@@ -47,9 +47,42 @@ Solution bases can be efficiently represented by a \textbf{backpointer path}. A 
 
 \section{What is the tree Basic-OR-Search maintains?}
 The tree maintained by Basic-OR-Search is called a \textit{traversal tree}. It is rooted in the start node \textit{s} and definied by node instances from \textit{G} and edges reverse to the backpointers. Path (\textit{n}, \ldots, \textit{s}), defined by the backpointers of the nodes, is reversed in the traversal tree as (\textit{s}, \ldots, \textit{n}) and is called a backpointer path.
-In general traversal trees are no subgraphs of the  search space graph \textit{G} because traversal trees can contain multiple instances of nodes in \textit{G}.
 
 \section{Why is the graph maintained by Basic-OR-Search a tree?}
 (A traversal tree is not directly maintained by an algorithm, hence this question is not exact.) It is called traversal tree, because it is a tree-unfolding of a part of the explored subgraph of \textit{G}. Every instance of a node can only have one parent,as it only got one backpointer reference. We don't have cycles because a node in \textit{G} is represented by multiple instances in the traversal tree (if the node got multiple successors that is).
+
+\section{Why is the traversal tree in Basic-OR-Search no subgraph of the OR-graph?}
+In general traversal trees are no subgraphs of the  search space graph \textit{G} because traversal trees can contain multiple instances of nodes in \textit{G}.
+
+\section{Are DFS and BFS variants of Basic-OR-Search? Why? / Why not?}
+TODO \\
+DFS uses a \textit{stack} as OPEN list, hence it uses the LIFO principle.
+BFS on the other hand uses a \textit{queue} as OPEN list, hence it uses the FIFO principle.
+Both algorithems can be converted into each other by only changing the implementation of the data structure of the OPEN list.
+\ldots
+
+\section{Comparison of DFS and BFS: Which algorithm is to be preferred when and why?}
+DFS is preferred when:
+\begin{itemize}
+\item We are given plenty of equivalent solutions.
+\item Dead ends can be recognized early, i.e. with considerable look-ahead.
+\item There are no cyclic or infinite paths (or at least they can be avoided).
+\end{itemize}
+BFS is preferred when:
+\begin{itemize}
+\item We know a solution is not far away from the start node.
+\item Solutions are rare and the tree is deep. (Because DFS will take way longer on those graphs.)
+\item \ldots 
+\end{itemize}
+An issue with BFS is that it has to store the explored part of the graph completley in memory. So when a graph is very wide, BFS will need too much memory. However, with BFS we do terminate with a solution if one exists, whereas DFS could follow an endless frutiless path.
+
+\section{Which nodes are stored on OPEN, which nodes on CLOSED?}
+Nodes waiting to be expanded are storted on OPEN (this includes both \textit{generated} and \textit{explored} nodes which have not been expanded yet), whereas already expanded nodes are stored on CLOSED.
+
+\section{Why is a function cleanup\_closed() needed in DFS?}
+It is needed in order to not run out of memory because of nodes we actually don't need to reference anymore. The function \textit{cleanup\_closed} deletes nodes from the CLOSED list that are no longer required. It is based on the principles that nodes which fulfill the dead end requirement can be discarded without hesitation. If a node \textit{n} is discarded, check if  \textit{n} has any predecessors that are still part of a solution path. A node is part of a solution path if it has a successors on OPEN. Predecessors that are not part of a solution path can be discarded.
+
+\section{What is iterative deepening?}
+Increasing the depth-bound of DFS in an outerloop and run DFS with an increased depth-bound value \textit{k} over and over again.
 
 \end{document}
