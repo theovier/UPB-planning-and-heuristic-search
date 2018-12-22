@@ -36,6 +36,20 @@ Applying the function \textit{next\_successor(n)} on a node \textit{n} and there
 \item unseen
 \end{itemize}
 
+\section{What are locally finite graphs? Why do we need them?}
+Local finitness means that a node has only a finite number of direct succesors. We do need this property as otherwise we would be stuck in an infinite loop when calling the methods \textit{succesors} or \textit{next\_succesor}.
 
+\section{What is a solution base (differences to solution paths)?}
+See question 2. Informally it is the inital part of a possible solution path. Note that we don't necessarily need to find a goal node when following expanding a solution base.
+
+\section{What is an efficient way of representing solution bases?}
+Solution bases can be efficiently represented by a \textbf{backpointer path}. A \textit{backpointer} is a reference of a newly generated node, pointing to its parent.
+
+\section{What is the tree Basic-OR-Search maintains?}
+The tree maintained by Basic-OR-Search is called a \textit{traversal tree}. It is rooted in the start node \textit{s} and definied by node instances from \textit{G} and edges reverse to the backpointers. Path (\textit{n}, \ldots, \textit{s}), defined by the backpointers of the nodes, is reversed in the traversal tree as (\textit{s}, \ldots, \textit{n}) and is called a backpointer path.
+In general traversal trees are no subgraphs of the  search space graph \textit{G} because traversal trees can contain multiple instances of nodes in \textit{G}.
+
+\section{Why is the graph maintained by Basic-OR-Search a tree?}
+(A traversal tree is not directly maintained by an algorithm, hence this question is not exact.) It is called traversal tree, because it is a tree-unfolding of a part of the explored subgraph of \textit{G}. Every instance of a node can only have one parent,as it only got one backpointer reference. We don't have cycles because a node in \textit{G} is represented by multiple instances in the traversal tree (if the node got multiple successors that is).
 
 \end{document}
