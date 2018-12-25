@@ -1,5 +1,6 @@
 \documentclass[12pt, a4paper]{article}
 \usepackage{sectsty}
+\usepackage{amsmath}
 \sectionfont{\fontsize{12}{15}\selectfont}
 \subsectionfont{\fontsize{10}{12}\selectfont}
 \begin{document}
@@ -84,5 +85,87 @@ It is needed in order to not run out of memory because of nodes we actually don'
 
 \section{What is iterative deepening?}
 Increasing the depth-bound of DFS in an outerloop and run DFS with an increased depth-bound value \textit{k} over and over again.
+
+\section{What information sources does the evaluation function f in BF use?}
+\begin{enumerate}
+\item evaluation of the information given by node \textit{n}
+\item estimates of the complexity of the remaining problem at \textit{n} in relation to $\Gamma$
+\item evaluations of the explored part \textit{G} of the search space graph
+\item domain specific problem solving knowledge
+\end{enumerate}
+
+\section{What are the main differences between UCS and BF?}
+Cost values in uniform-cost-search (UCS) are stored with the nodes. The OPEN list is organized as a heap, and nodes are explored with respect to the cheapest cost. UCS is also called "cheapest-first-search" and it basically best-first-search (BFS) with some modifications.
+
+\section{What is the difference in the evaluation functions of UCS and BF?}
+Uniform-cost-search can only make use of the knowledge from the explored part of the search space graph, the evaluation function \textit{f} in BF can use domain specific knowlege.
+
+\section{What is path discarding?}
+For two paths leading to the same node, the one with the higher \textit{f}-value is discarded. (Path discarding is only used in BF* and its successors.)
+
+\section{When using path discarding, is the traversal tree a subgraph of the search space graph?}
+TODO \\
+\ldots
+
+\section{Why can path discarding be problematic?}
+Path discarding is irreversible. It entails the risk of not finding desired solutions. The risk can be eleminated by restricting the evaluation function to be orver-preserving. Path discarding is performed implicitly by maintaining at most one instantiation per node and, therefore, one backpointer per node.
+
+\section{What does node reopening mean?}
+Reopening means moving a node from CLOSED to OPEN because the node could be reached with a better \textit{f}-value than the first time it was explored. (Note: Reopening of nodes can be avoided by using a monotonically increasing function \textit{f}, $f(n) \leq f(n')$ for successors $n'$ of $n$.)
+
+\section{What is $C_P(s), C^*(s), \hat{C}_P(s), \hat{C}(s)$ ?}
+\subsection{$C_P(s)$}
+$C_P$ is a cost function which assigns each solution path $P$ and node $n$ in $P$ a cost value $C_P(n)$. $C_P(s)$  specifies the cost of a solution path  \textit{P} for \textit{s}: 
+\begin{align*}
+f(\gamma) = C_P(s)
+\end{align*}
+with $P$ backpointer path of $\gamma$.
+
+\subsection{$C^*(s)$}
+$C^*(s) = C^*$ is the optimum solution cost for s. \\
+In general: $C^*(n) = $ inf $\{C_P(n) \mid P $ is solution path for $n$ in $G\}$ 
+
+\subsection{$\hat{C}_P(s)$}
+$\hat{C}_P(s)$ is the estimated optimum solution cost for $s$ in $G$ based on a solution base $P$ with cost function $C_P(n)$.
+$\hat{C}_P(s)$ is optimistic iff $\hat{C}_P(n) \leq  C^*_P(n)$.
+
+\subsection{$\hat{C}(s)$}
+$\hat{C}(s)$ is the estimated optimum solution cost for $s$ (no solution base provided. so it searche in all solution bases) \\
+Estimated optimum solution cost for node $n$ in $G$: \\
+$\hat{C}(n) = $ inf $\{\hat{C}_P(n) \mid P $ is solution base in $G\}$ \\
+A solution base $P$ for $s$ with $\hat{C}_P(s) = \hat{C}(s)$ is called most promising solution base (for $s$).
+
+\section{How do we define an evaluation function f by a cost function $\hat{C}$?}
+\textbf{UNSURE!} \\
+We define $f(n)$ as $\hat{C}_P(n)$ with $P$ backpointer path of $n$: $f(n)$ is a recursive evaluation function.
+
+\section{How do we define recursive cost functions?}
+A cost function $C_P$ for a solution path $P$ is called recursive if for each node $n$ in $P$ holds:
+$C_P(n) =  
+\begin{cases}
+F[E(n)] \quad \quad \quad \quad \text{$n$ is leaf in $P$, hence $n$ is goal node.} \\
+F[E(n, C_P(n')] \quad \text{$n$ is inner node in $P$ and $n'$ direct succ. of $n$.}
+\end{cases}
+$
+
+\section{How can we define a function $\hat{C}_P(n)$ for estimated solution cost on basis of recursive cost functions?}
+$\hat{C}_P(n) =  
+\begin{cases}
+c(n) \quad \quad \quad \quad \quad \text{$n$ is leaf in $P$ and $P$ is solution path.} \\
+h(n) \quad \quad \quad \quad \quad \text{$n$ is leaf in $P$ but $P$ is no solution path ($n$ in OPEN).} \\
+F[E(n), \hat{C}_P(n')] \quad \text{$n$ is inner node in $P$ and $n'$ direct successor of $n$ in $P$.}
+\end{cases}
+$
+\\\\
+$E(n)$ denotes local properties of $n$ and $F$ is the so called cost measure. 
+$P$ denotes a solution base. The estimated value $h(n)$ is used as if it was correct in the computation of predecessors.
+
+\section{Why can it be an advantage to use recursive cost functions?}
+If we use a recursive cost function, we compute tail to front (Face-Value-Principle). This means going all the way down to $\gamma$ and then up again, combining the costs on the way. We have to comnsider the whole Path $P$ when using a recursive cost function. The advantage is then that we simply have to consider the costs of a single node and it's local properties instead of the whole path at once. It is basically a series of local computations.
+
+\section{Can cost functions help to avoid problems in path discarding?}
+Idea: Order preserving cost function can help to avoid following the wrong way and thus wrongfuly discarding a optimum paths.
+Cost estimations for alternative solution bases must be independet of their shared continuation (S:III-80). $\hat{C}_P(n)$ must be \textit{order-preserving}.
+
 
 \end{document}
