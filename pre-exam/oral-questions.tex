@@ -1,6 +1,8 @@
 \documentclass[12pt, a4paper]{article}
 \usepackage{sectsty}
 \usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{nicefrac}
 \sectionfont{\fontsize{12}{15}\selectfont}
 \subsectionfont{\fontsize{10}{12}\selectfont}
 \begin{document}
@@ -167,5 +169,71 @@ If we use a recursive cost function, we compute tail to front (Face-Value-Princi
 Idea: Order preserving cost function can help to avoid following the wrong way and thus wrongfuly discarding a optimum paths.
 Cost estimations for alternative solution bases must be independet of their shared continuation (S:III-80). $\hat{C}_P(n)$ must be \textit{order-preserving}.
 
+\section{What is the evaluation function used in algorithm A*?}
+In A* we use $f(n) = g(n) + h(n)$ as evaluation function.
+
+\section{What is \textit{h} and what is \textit{g} in the evaluation function of algorithm A*?}
+$g$ is the sum of edge cost values of the backpointer path from a given node (cost of backpointer path of a given node at some point in time.) \\\\
+$h$ is the estimate of the optimum cost of a solution path from a given node. ($h(\gamma) = 0$.)
+
+\section{What is path cost in algorithm A*?}
+Sum of edge cost values along that path.
+
+\section{Is the underlying path cost function $\hat{C}_P(s)$ in A* order preserving? Is this only true if we have
+negative edge cost values?}
+Idea: In A*: $f(n) = \hat{C}_{P_{s-n}}(s) = g_{P_{s-n}}(n) + h(n)$. Evaluation functions $f$ that rely on additive cost measures $F[e, c] = e + c$ are  oder-preserving. So $f(n)$ is order-preserving. It is not only true for negative edge cost values.
+
+
+\section{Why do we need delayed termination in order to solve optimization problem? (Example?)}
+Without delayed termination, BF would return as soon as it found a goal node $\gamma$. With delayed termination we terminate when we select the most promising soloution base from OPEN which happens to be a solution path. Assume we do not use delayed termination and we reached node $n$. The only two goal nodes, $\gamma_1, \gamma_2$ are descendents of $n$. $\gamma_1$ is first explored with a path cost of $100$. BF would immediatley terminate with $\gamma_1$ instead of exploring all possible children of $n$, which could lead to exploring $\gamma_2$ with a much smaller path cost. This is why we need delayed termination. In this case, we would terminate with the cheaper solution path if it happened to be the most promising solution base at this point in time.
+
+\section{What is an optimistic evaluation function?}
+An optimistic evaluation function underestimates cost. In particular the true cost of a solution path $P_{s-\gamma}$ extending a solution base $P_{s-n}$ exceeds its $f$-value: $C_{P_{s-\gamma}}(s) \geq f(\gamma)$.
+
+\section{Why do we need optimistic evaluation functions in order to solve optimization problems? (Example?)}
+Assume we have a graph with start node $s$ and it's two children $a$ and $b$. There is a goal node $\gamma_a$ and $\gamma_b$, reachable from $a$ and $b$ respectively. Also assume we use a non-optimistic evaluation function. If the $f$-value of $b$ would be $100$ but the actual cost for $P_{s-\gamma_b}$ would be $1$, we would still follow node $a$ if it's $f$-value was for example $5$. We would continue to follow $P_{s-\gamma_a}$ and reach a goal node. The actual cost would then be $5$ which is less than the $1$ we would've paid if we followed node $b$. But $b$ was overestimatic the actual cost, so we never considered the actual cheapest path in this graph.
+
+\section{What is the motivation for specifying Prop(G) for search space graphs?}
+Prop($G$):
+\begin{enumerate}
+\item Search space graph $G$ is an implicitly definied OR-graph.
+\item $G$ has only a single start node $s$.
+\item $G$ is locally finite.
+\item For $G$ a set $\Gamma$ of goal nodes is given. 
+\item Each path from $s$ to $\gamma \in \Gamma$ in $G$ is a solution path. In A* *($\gamma$)$= true$, independent of the backpointer path of $\gamma$.
+\item Each edge $(n, n')$ in $G$ has non-negative edge-cost $c(n, n')$. The pathcost is the sum of edge cost along that path.
+\item $G$ has a positive lower bound $\delta$ of edge costs. $\delta$ is fixed $c(n, n') \geq \delta > 0$ for all $(n, n')$ in $G$.
+\item For each node $n$ in $G$ there exists an heuristic estimate $h(n)$ for the cost of the cheapest path from $n$ to $\gamma$. $h(n) \geq 0$, since $h(\gamma) = 0)$ for $\gamma \in \Gamma$.
+\end{enumerate}
+Motivations for Prop($G$):
+\begin{enumerate}
+\item 
+	\begin{enumerate}[label=(\alph*)] 
+	\item \textbf{Implicitly}: Would not be possible to represent infinite graphs with explicit representation.
+	\item \textbf{Directed OR-Graph}: We want to use A*, a BF algorithm for OR-graphs.
+	\end{enumerate}
+\item Simplification.
+\item Node expansion. ForEach-Loop would not terminate if $successors$ would return infinite many nodes.
+\item Maintenance of structure.
+\item No additional constraints on solution paths.
+\item 
+	\begin{enumerate}[label=(\alph*)] 
+	\item \textbf{non-negative cost}: Prune cyclic paths which would corrupt the backpointer structure.
+	\item \textbf{sum of edge cost}: Requirement as A* uses additive cost measure. No other calculation is possible.
+	\end{enumerate}
+\item We get rid of infinite graphs which for example will half the edge cost values all the time, starting with $\nicefrac{1}{2}$ and thus creating an infinite path which we will follow if the other option has edge cost value greather than 1.
+\item 
+	\begin{enumerate}[label=(\alph*)] 
+	\item \textbf{computable}: We want to implement it.
+	\item \textbf{$h(n) \geq 0$}: as path cost must not be negative, the estimate should also be non-negative. (Worst case $h(n) = 0$: uninformed search.)
+	\item \textbf{$h(\gamma) = 0$}: Simplicity.
+	\end{enumerate}
+\end{enumerate}
+
+\section{What is the consequence of a positive lower bound of edge cost values for long paths?}
+The cost of the path will eventually exceed any given bound if the path is only long enough due to the lower bound of edge cost values $\delta$ .
+
+\section{Is existence of optimum cost solution paths guaranteed for search space graphs with Prop(G)?}
+No. However, if there is a solution path, we can argue that there also is an optimum solution path in $G$. But we can not guarantee that there is any solution path in $G$ at all.
 
 \end{document}
