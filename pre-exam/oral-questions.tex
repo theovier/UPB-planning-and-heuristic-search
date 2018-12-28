@@ -262,4 +262,10 @@ Due to the shallowest OPEN nodes, we can argue that A* will not terminate with "
 \section{What is the additional property of shallowest OPEN nodes on optimum cost paths that is used for proving admissibility of A*?}
 We use the lemma of \textit{C*-bounded OPEN nodes} which means that on an optimum cost path there has to be a shallowest OPEN node with $f(n) \leq C^*$. 
 
+\section{What is the statement of the C* bounded OPEN node lemma?}
+Let $G$ be a search space graph with $Prop(G)$ and let A* use an admissible heuristic function $h$. For each optimum path $P^{*}_{s-\gamma} \in \boldsymbol{P^*_{s-\gamma}}$ and at each point in time before A* terminates there is an OPEN node $n'$ on $P^{*}_{s-\gamma}$ with $f(n) \leq C^*$. 
+
+\section{What is the definition of an admissible heuristic function?}
+$h(n) \leq h^*(n)$ for all $n \in G$. (Admissible heuristic functions are thus optimistic estimates of the cheapest solution cost for a node in $G$.)
+
 \end{document}
