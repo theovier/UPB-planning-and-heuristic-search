@@ -236,4 +236,30 @@ The cost of the path will eventually exceed any given bound if the path is only 
 \section{Is existence of optimum cost solution paths guaranteed for search space graphs with Prop(G)?}
 No. However, if there is a solution path, we can argue that there also is an optimum solution path in $G$. But we can not guarantee that there is any solution path in $G$ at all.
 
+\section{What is completeness, what is admissibility for search algorithms?}
+\textbf{Completeness}: The algorithm terminates with a solution, if one exists. \\
+\textbf{Admissibility}: The algorithm terminates with an optium solution, if a solution exists.
+
+\section{What are the main steps in proving completeness of A*?}
+A* is complete for finite graphs $G$ that have $Prop(G)$ (S:V-43). Sketch of proof:
+\begin{enumerate}
+\item Assume that there is a solution path $P_{s-\gamma}$.
+\item At any point before A* terminates there is a shallowest OPEN node on $P_{s-\gamma}$ or all nodes on $P_{s-\gamma}$ have been selected for expansion.
+\item If there is a shallowest OPEN node on $P_{s-\gamma}$, A* will not terminate with "fail".
+\item If all nodes on $P_{s-\gamma}$ have been selected for expansion, also $\gamma$ has been selected for expansion and A* terminates with solution $\gamma$.
+\end{enumerate}
+
+\section{Why can’t we prove termination of A* on infinite graphs?}
+Because in the prove of termination of A* we use the fact that the number of cycle-free paths is finite in a finite graph, and therefore it can only exist a finite number of backpointer paths. We can not use this fact for infinite graphs. In other words: A* could follow an infinite path in an infinite graph and never terminate – hence we can not prove termination on infinite graphs. \\
+\textbf{ATTENTION}: We can prove completness for infinite graphs, when we assume that there is a solution path. But to prove termination we are not allowed to assume this.
+
+\section{What is a shallowest OPEN node?}
+The shallowest OPEN node for a path $P$ is the first node we encounter on that path (starting from $s$) which is on OPEN.
+
+\section{How do shallowest OPEN nodes help proving completeness?}
+Due to the shallowest OPEN nodes, we can argue that A* will not terminate with "fail" since there always is an OPEN node which has to be selected for expansion.
+
+\section{What is the additional property of shallowest OPEN nodes on optimum cost paths that is used for proving admissibility of A*?}
+We use the lemma of \textit{C*-bounded OPEN nodes} which means that on an optimum cost path there has to be a shallowest OPEN node with $f(n) \leq C^*$. 
+
 \end{document}
