@@ -7,6 +7,7 @@
 \subsectionfont{\fontsize{10}{12}\selectfont}
 \begin{document}
 \title{"Planning and Heuristic Search" \\ Oral Pre-Exam Questions (WS 2018/19)}
+\author{Disclaimer: the given answers are not official.}
 \date{}
 \maketitle
 %\input{oral-questions-1}
@@ -58,7 +59,7 @@ The tree maintained by Basic-OR-Search is called a \textit{traversal tree}. It i
 In general traversal trees are no subgraphs of the  search space graph \textit{G} because traversal trees can contain multiple instances of nodes in \textit{G}.
 
 \section{Are DFS and BFS variants of Basic-OR-Search? Why? / Why not?}
-TODO \\
+Yes. They use the same algorithm but their datastructure is implemented differently.
 DFS uses a \textit{stack} as OPEN list, hence it uses the LIFO principle.
 BFS on the other hand uses a \textit{queue} as OPEN list, hence it uses the FIFO principle.
 Both algorithems can be converted into each other by only changing the implementation of the data structure of the OPEN list.
@@ -75,9 +76,8 @@ BFS is preferred when:
 \begin{itemize}
 \item We know a solution is not far away from the start node.
 \item Solutions are rare and the tree is deep. (Because DFS will take way longer on those graphs.)
-\item \ldots 
 \end{itemize}
-An issue with BFS is that it has to store the explored part of the graph completley in memory. So when a graph is very wide, BFS will need too much memory. However, with BFS we do terminate with a solution if one exists, whereas DFS could follow an endless frutiless path.
+An issue with BFS is that it has to store the explored part of the graph completley in memory. So when a graph is very wide, BFS will need too much memory. However, with BFS we do terminate with a solution if one exists, whereas DFS could follow an endless fruitless path.
 
 \section{Which nodes are stored on OPEN, which nodes on CLOSED?}
 Nodes waiting to be expanded are storted on OPEN (this includes both \textit{generated} and \textit{explored} nodes which have not been expanded yet), whereas already expanded nodes are stored on CLOSED.
@@ -97,7 +97,7 @@ Increasing the depth-bound of DFS in an outerloop and run DFS with an increased 
 \end{enumerate}
 
 \section{What are the main differences between UCS and BF?}
-Cost values in uniform-cost-search (UCS) are stored with the nodes. The OPEN list is organized as a heap, and nodes are explored with respect to the cheapest cost. UCS is also called "cheapest-first-search" and it basically best-first-search (BFS) with some modifications.
+Cost values in uniform-cost-search (UCS) are stored with the nodes. The OPEN list is organized as a heap, and nodes are explored with respect to the cheapest cost. UCS is also called "cheapest-first-search" and it basically is best-first-search (BFS) with some modifications.
 
 \section{What is the difference in the evaluation functions of UCS and BF?}
 Uniform-cost-search can only make use of the knowledge from the explored part of the search space graph, the evaluation function \textit{f} in BF can use domain specific knowlege.
@@ -106,8 +106,7 @@ Uniform-cost-search can only make use of the knowledge from the explored part of
 For two paths leading to the same node, the one with the higher \textit{f}-value is discarded. (Path discarding is only used in BF* and its successors.)
 
 \section{When using path discarding, is the traversal tree a subgraph of the search space graph?}
-TODO \\
-\ldots
+This questions aims at the removal of duplicates. With path discarding the traversal tree will represent cycle-free paths in $G$ starting in $s$. If $G$ is cyclic-free then it is a subgraph.
 
 \section{Why can path discarding be problematic?}
 Path discarding is irreversible. It entails the risk of not finding desired solutions. The risk can be eleminated by restricting the evaluation function to be orver-preserving. Path discarding is performed implicitly by maintaining at most one instantiation per node and, therefore, one backpointer per node.
@@ -200,7 +199,7 @@ Prop($G$):
 \item $G$ has only a single start node $s$.
 \item $G$ is locally finite.
 \item For $G$ a set $\Gamma$ of goal nodes is given. 
-\item Each path from $s$ to $\gamma \in \Gamma$ in $G$ is a solution path. In A* *($\gamma$)$= true$, independent of the backpointer path of $\gamma$.
+\item Each path from $s$ to $\gamma \in \Gamma$ in $G$ is a solution path. In A*($\gamma$)$= true$, independent of the backpointer path of $\gamma$.
 \item Each edge $(n, n')$ in $G$ has non-negative edge-cost $c(n, n')$. The pathcost is the sum of edge cost along that path.
 \item $G$ has a positive lower bound $\delta$ of edge costs. $\delta$ is fixed $c(n, n') \geq \delta > 0$ for all $(n, n')$ in $G$.
 \item For each node $n$ in $G$ there exists an heuristic estimate $h(n)$ for the cost of the cheapest path from $n$ to $\gamma$. $h(n) \geq 0$, since $h(\gamma) = 0)$ for $\gamma \in \Gamma$.
@@ -241,16 +240,18 @@ No. However, if there is a solution path, we can argue that there also is an opt
 \textbf{Admissibility}: The algorithm terminates with an optium solution, if a solution exists.
 
 \section{What are the main steps in proving completeness of A*?}
-A* is complete for finite graphs $G$ that have $Prop(G)$ (S:V-43). Sketch of proof:
 \begin{enumerate}
 \item Assume that there is a solution path $P_{s-\gamma}$.
-\item At any point before A* terminates there is a shallowest OPEN node on $P_{s-\gamma}$ or all nodes on $P_{s-\gamma}$ have been selected for expansion.
-\item If there is a shallowest OPEN node on $P_{s-\gamma}$, A* will not terminate with "fail".
-\item If all nodes on $P_{s-\gamma}$ have been selected for expansion, also $\gamma$ has been selected for expansion and A* terminates with solution $\gamma$.
+\item Due to the shallowest OPEN node, no termination.
+\item Define $M = max(f(n))$ for $n \in P$.
+\item $f(n) \leq M$ for all nodes on $P$.
+\item $f(n') \geq M$ not selected before nodes on $P$.
+\item Finite set of paths with cost $M$ starting in $s$.
+\item $\gamma$ selected
 \end{enumerate}
 
 \section{Why can’t we prove termination of A* on infinite graphs?}
-Because in the prove of termination of A* we use the fact that the number of cycle-free paths is finite in a finite graph, and therefore it can only exist a finite number of backpointer paths. We can not use this fact for infinite graphs. In other words: A* could follow an infinite path in an infinite graph and never terminate – hence we can not prove termination on infinite graphs. \\
+Because in the proof of termination of A* we use the fact that the number of cycle-free paths is finite in a finite graph, and therefore it can only exist a finite number of backpointer paths. We can not use this fact for infinite graphs. In other words: A* could follow an infinite path in an infinite graph and never terminate – hence we can not prove termination on infinite graphs. \\
 \textbf{ATTENTION}: We can prove completness for infinite graphs, when we assume that there is a solution path. But to prove termination we are not allowed to assume this.
 
 \section{What is a shallowest OPEN node?}
@@ -267,5 +268,95 @@ Let $G$ be a search space graph with $Prop(G)$ and let A* use an admissible heur
 
 \section{What is the definition of an admissible heuristic function?}
 $h(n) \leq h^*(n)$ for all $n \in G$. (Admissible heuristic functions are thus optimistic estimates of the cheapest solution cost for a node in $G$.)
+
+\section{What is the idea of the proof of the C* bounded OPEN node lemma?}
+Assumption of opt. sol. path + combination of shallowest open node + optimally reachable node on optimum solution path + admissible heursitic function.
+
+\section{What is the statement of the admissibility theorem for A*?}
+A* is admissible when using an admissible heuristic function $h$ on search space graphs $G$ with $Prop(G)$.
+
+\section{If we use a solution path $P_{s-\gamma}$ with cost $C \geq C^*$ instead of an optimum cost solution path, what is the statement we can prove instead of the $C^*$ bounded OPEN node lemma?}
+
+\ldots We can not use the 3. step of the proof (optimally reachable) since we are not on an optimum cost solution path anymore \ldots
+
+\section{What necessary and sufficient conditions for node expansion by A* did we consider?}
+\begin{enumerate}
+\item necessary: $f(n) \leq C^*$ 
+\\ sufficient: $f(n) < C^*$.
+\item necessary:  $\exists C^*$-bounded path $P_{s-n}$
+\\ sufficient: $\exists$ strictly $C^*$-bounded path $P_{s-n}$.
+\item necessary: $g^*(n) + h(n) \leq C^*$
+\\ sufficient: $g^*(n) + h(n) < C^*$.
+\end{enumerate}
+
+\section{What are the nodes considered in necessary and sufficient conditions for node expansion by A*?}
+\begin{enumerate}
+\item nodes on OPEN
+\item nodes on $C*$-bounded paths
+\item \ldots
+\end{enumerate}
+
+\section{How can we increase efficiency by applying the necessary condition for node expansion of OPEN nodes by A*?}
+\ldots
+
+\section{How is monotonicity (consistency) for heuristic functions defined?}
+Consistency: $h(n) \leq k(n, n') + h(n')$ \\
+Monotonicity: $h(n) \leq c(n, n') + h(n')$
+
+\section{How can monotonicity be proven from consistency? (Proof ideas.)}
+Monotonicity follows from consistency since consistency states the triangle inequality for any pair of nodes $n, n'$ with $n'$ reachable from $n$ considering cost of the cheapest path. Monotoniciy considers special pairs of nodes $n' \in succ(n)$ and per definition holds: $k(n, n') \leq c(n, n')$.
+
+\section{How can consistency be proven from monotonicity? (Proof.)}
+Let $n_1$ be reachable from $n_0$ and let $P = (n_0, n_1, \ldots, n_l)$ be a cheapest path from $n_0$ to $n_l$. Using the monotonicity of $h$ it can be proven by induction over the path length that 
+\begin{align*}
+h(n_0) \leq \sum_{i=1}^l c(n_{i-1}, n_i) + h(n_l)
+\end{align*}
+Since a cheapest path $P$ was considered, we have $k(n_0, n_l) = \sum_{i=1}^{l} c(n_{i-1}, n_i)$ and hence proven consistency: $h(n) \leq k(n, n') + h(n')$.
+
+\section{Why is it important to have both, monotonicity and consistency?}
+Consistency is the more powerful statement, so for further proofs it makes sense to have consistency. However, to check if a heuristic function $h$ is consistent, is way harder than to check if it is monotone, since $k(n, n')$ had to be considered instead of $c(n, n')$. 
+
+\section{Are monotone heuristic functions admissible? (Proof.)}
+Yes. \\
+Since $monotonicity \Leftrightarrow consistency$, it is enough to show that consistent heuristic functions $h$ are admissible. Proof (Sketch):
+\begin{enumerate}
+\item Let $h$ be consistent, i.e. $h(n) \leq k(n, n') + h(n')$ for all nodes $n, n'$ in $G$.
+\item Consider an arbitrary node $n$.
+\item If no goal node is reachable from $n$, then $h^*(n) = \infty$ and thus $h(n) \leq h^*(n)$.
+\item If some goal node is reachable from $n$, then there is a goal node $\gamma$ reachable from $n$ with cheapest cost (Corollary: Solution Existence Entails Optimum).
+\item Using $n' = \gamma$, we have $h(n) \leq k(n, \gamma) + h(\gamma)$, thus $h(n) \leq h^*(n) + 0$.
+\item Since $n$ is arbitrary chosen, $h(n) \leq h^*(n)$ holds for all nodes. Hence $h$ is admissible.
+\end{enumerate}
+
+\section{Consider the 8-puzzle. Give an example of a monotone heuristic function.}
+TODO: Check if this is true.
+\begin{enumerate}
+\item sum of misplaced tiles (Hamming Distance).
+\item sum of manhatten distances of misplaced tiles (Manhatten Distance).
+\end{enumerate}
+
+\section{What is the advantage of using monotone heuristic functions in A*?}
+When $h$ is monotone, we don't have to re-expand nodes which are already on closed. More formally: An A* algorithm that uses a monotone heuristic function $h$ will expand only nodes to which it has found cheapest paths: $g(n) = g^*(n), \quad \forall n \in$ CLOSED. 
+
+\section{Give the outline of the proof of the No Reopening Theorem}
+\begin{enumerate}
+\item Assume that A* selects a node $n$ for expansion with $g(n) > g^*(n)$.
+\item Let $P^*_{s-n}$ be a cheapest path from $s$ to $n$.
+\item If $P^*_{s-n} \bigcap$ OPEN $ = \{n\}$, then all predecessors of $n$ on $P^*_{s-n}$ have been expanded and $g(n) = g^*(n)$, contradicting the assumption (Lemma: Shallowest OPEN node on optimum path).
+\item $P^*_{s-n} \bigcup$ OPEN $ \neq \{n\}$, let $n'$ be the shallowest OPEN node on $P^*_{s-n}$.
+\item Using $g(n') = g^*(n')$ and the monotonicity of $h$ we have $f(n') = g(n') + h(n') = g^*(n') + h(n') \leq g^*(n') + k(n', n) + h(n)$.
+\item Since $n' \in P^*_{s-n}$, we have $g(n') + k(n', n) = g^*(n)$ and thus $f(n') \leq g^*(n) + h(n)$.
+\item According to the assumption $g(n) > g^*(n)$ we have $f(n') < g(n) + h(n)$ and thus $f(n') < f(n)$.
+\item A* selects $n'$ for expansion instead of $n$, contradicting the assumption. 
+\end{enumerate}
+
+
+\section{Should we always prefer monotone heuristic functions over admissible ones?}
+Yes? Since monotonicity requires admissibility but admissibility does not guarantee monotonicity. With monotonicty we can reduce the complexity of A* because of the No Reopening Theorem.
+
+\section{If we have two heuristic functions, the one more informed than the other on part A of the search
+space graph and the other way round on part B, which heuristic function should we use in A* search?}
+
+We should prefer the heuristic function that is more informed on part B. It is more important to have a good heuristic when near to a goal node than at the very beginning. Example: Distance Uni -> City: not important if 2km or 10km. But distance from here to blackboard is more important if it is 10m or 50cm. 
 
 \end{document}
