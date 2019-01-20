@@ -359,4 +359,29 @@ space graph and the other way round on part B, which heuristic function should w
 
 We should prefer the heuristic function that is more informed on part B. It is more important to have a good heuristic when near to a goal node than at the very beginning. Example: Distance Uni -> City: not important if 2km or 10km. But distance from here to blackboard is more important if it is 10m or 50cm. 
 
+\section{Why is solving optimization problems with A* search an efficiency nightmare?}
+The runtime of A* can be exponential, i.e. $2^n$. Also if several near-optimum solutions exist, then A* uniformly follows the different paths, spending a lot of time.
+
+\section{What is the idea of the weighing approach?}
+Evaluation function $f = g + h$ consists of a breadth-first-component (nodes close to $s$ are preferred) $g$, and a depth-first-component $h$. The general idea of the weighing approach is now to strengthen the depth-first-component to find "some" solution faster whilst guaranteeing that the cost of the foind solution will be near optimum. 
+
+\section{Why do we expect that the search effort in WA* is less than in A*?}
+WA* uses $f_{\epsilon} = g + (1 + \epsilon) \cdot h$.  It allows a solution to be error term $\epsilon$ worse than an optimal solution. Therefore we expect that the overall search effort for finding a non-optimal solution will be less than in A*.
+
+\section{What properties should $h$ have in WA*, what properties should $(1 + \epsilon)h$ have?}
+$h$ should be an admissible heuristic function. $\epsilon$ should be chosen in such a way that $(1 + \epsilon)h$ is not admissible. 
+
+\section{What is the idea of the $A^*_{\epsilon}$ algorithm?}
+Use two heuristic functions $h$ and $h_F$. $h$ is used to form $FOCAL = \{n \in OPEN \mid f(n) \leq (1 + \epsilon) \cdot \min_{n' \in OPEN}   f(n')\}$. $h_F(n)$ is used to estimate the computational effort for completing the search from $n$ and thus for the selection of nodes from FOCAL.
+
+\section{What properties should $h$ have in $A^*_\epsilon$, what properties should $h_F$ have?}
+$h$ should be admissible. No restrictions on $h_F$.
+
+\section{Why do we expect that the search effort in $A^*_\epsilon$ less than in A*?}
+Same reason as question 66, we allow a $\epsilon$-percentage deviation from optimum solution cost.
+
+\section{What are the differences of WA* and $A^*_\epsilon$ to A* in pseudocode?}
+WA*: We have to rewrite the selection from open in line 4. It should include the $(1 + \epsilon)h$ instead of only $g + h$. \\ \\
+$A^*_\epsilon$ : Add a calculation of FOCAL and then select from FOCAL based on $h_F$.
+
 \end{document}
