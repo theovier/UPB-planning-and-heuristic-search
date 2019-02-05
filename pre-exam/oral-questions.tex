@@ -384,4 +384,124 @@ Same reason as question 66, we allow a $\epsilon$-percentage deviation from opti
 WA*: We have to rewrite the selection from open in line 4. It should include the $(1 + \epsilon)h$ instead of only $g + h$. \\ \\
 $A^*_\epsilon$ : Add a calculation of FOCAL and then select from FOCAL based on $h_F$.
 
+\section{What cost $C$ of a solution path can be expected for $WA^*$ and $A^*_\epsilon$? (Preconditions.)}
+$C \leq (1 + \epsilon) * C^*$ if $h$ is admissible, $\epsilon > 0$ and graph $G$ has $Prop(G)$ (keyword: $\epsilon$-admissibility).
+
+\section{Which of the two algorithms $WA^*$ and $A^*_\epsilon$ is more powerful? (Using appropriate functions $h$ and $h_F$ .)}
+$A^*_\epsilon$ is more powerful as it can simulate $WA^*$ but not the other way around.  
+
+\section{What is the essential step in proving that $A^*_\epsilon$ can simulate $WA^*$?}
+\ldots
+
+\section{Is $WA^*$ complete? Is $A^*_\epsilon$ complete?}
+Yes, WA*  is complete, since any results for $A^*$ that don't require an admissible heuristic function as a precondition are also valid for $WA^*$. Completness does not require any preconditions. \\ \\
+Yes. Completness of $A^*_\epsilon$ can be proven analogously to the proof of completness of $A^*$ using $(1 + \epsilon) \cdot M$ as cost bound for paths. 
+
+\section{How can we proof $\epsilon$-admissibility of $WA^*$ ?}
+\begin{enumerate}
+\item \textit{Theorem Completness of A*} implies completness of WA*, since WA* differs from A* only in the evaluation function used and since all restrictions for $h$ are also met by $(1 + \epsilon) h$.
+\item Let WA* terminate with a goal node $\gamma$ and solution cost $C = f_{\epsilon}(\gamma)$.
+\item Let $n'$ be the shallowest OPEN node on some optimal path at termination. Then we have $f_{\epsilon}(n') = g^*(n') + (1 + \epsilon) \cdot h(n') \leq (1 + \epsilon) \cdot (g^*(n') + h(n')) $.
+\item Since $h$ is admissible, we have $f_{\epsilon}(n') \leq (1 + \epsilon) \cdot (g^*(n') + h^*(n'))$.
+\item From $g^*(n') + h^*(n') = C^*$ (node on optimum path) follows that $f_\epsilon(n') \leq (1 + \epsilon) \cdot C^*$.
+\item Since WA* selects nodes with smallest $f_{\epsilon}$-values, we have $C \leq f_\epsilon(n') \leq (1 + \epsilon) \cdot C^*$.
+\end{enumerate}
+
+\section{How can we proof $\epsilon$-admissibility of $A^*_\epsilon$}
+\begin{enumerate}
+\item Completness of $A^*_\epsilon$ can be proven analogously to the proof of completness of $A^*$ using $(1 + \epsilon) \cdot M$ as cost bound for paths. 
+\item Let $A^*_\epsilon$ terminate with goal node $\gamma$ and solution cost $C = f(\gamma)$.
+\item Let $n'$ be the shallowest OPEN node on an optimal path at termination. The we have $f(n') = g^*(n') + h(n').$ (\textit{Corallary "Shallowest OPEN node on optimum path")}.
+\item Since $h$ is admissible, we have $f(n') \leq g^*(n') + h^*(n')$.
+\item From $g^*(n') + h^*(n') = C^*$ (node on optimum path) follows that $f(n') \leq C^*$.
+\item Let $n$ be the OPEN node with the smallest $f(n)$. By definition, we have $f(n) \leq f(n')$.
+\item Since $\gamma$ was selected from FOCAL, we have $C \leq f(n) \cdot (1 + \epsilon)$.
+\item Therefore $C \leq f(n') \cdot (1 + \epsilon)$.
+\item Hence $C \leq C^* \cdot (1 + \epsilon)$. 
+\end{enumerate}
+
+\section{Does $A^*_\epsilon$ benefit from using monotone heuristic functions in the same way $A^*$ does?}
+No. In $A^*_\epsilon$ monotone heuristic functions generally do not imply that nodes won't be re-expanded. \ldots
+
+\section{What is restricted path discarding?}
+Path discarding is only applied for nodes on OPEN, i.e. nodes that don't have been expanded yet. An $A^*_\epsilon$ algorithm using restricted path discarding is called $NRA^*_\epsilon$.
+\ldots 
+
+\section{What is the relation of cost $C$ of a solution path found by $NRA*_{\epsilon}$ to $C^*$?}
+Let $N$ be the maximal length of an optimal solution path. If the heuristic function $h$ is monotone $NRA*_\epsilon$ terminates with solution cost \\
+$C \leq (1 + \epsilon)^{N/2} \cdot C^*$.\\
+
+\section*{{\huge Part Planning}}
+
+\section{What is a STRIPS model and a STRIPS planning problem? Explain states, goals, CWA, DCA, UNA.}
+STRIPS stands for \textit{Standford Research Inistitute Problem Solver}.
+\subsection*{STRIPS model}
+STRIPS model $ S = (C, P, O)$ is given by a finite set $P$ of predicate symbols with some arity, and a finite set $O$ of operator descriptions of the following form, and using only constants in $C$, predicates in $P$ and variables. \\ \\
+operatorname($ x_1, \ldots,  x_n $) \\
+precondition: finite list of literals describing preconditions. \\
+effects: finite list of literals describing effects. 
+
+\subsection*{STRIPS planning problem}
+A STRIPS planning problem $(S, s_init, c_goal)$ is given by:
+\begin{enumerate}
+\item STRIPS model $S$
+\item a start state $s_init$
+\item a goal $c_goal$ definint conditions for goal states
+\end{enumerate}
+
+
+\subsection*{States}
+A state is specified by a finite set (i.e. a conjunction) of variable-free atomic formulas (i.e. positive literals). A state in a STRIPS model is described by a finite set of variable-free positive literals assuming DCA, UNA, CWA.
+
+\subsection*{Goals}
+A STRIPS goal is described by a finite set of variable-free literals (can also be negative). \\
+A goal is satisfied in a state if all non-negated literals of the goal description are contained in the state description and no negated literal of the goal description is contained in the state description. A state satisfying the goal is a \textit{goal state}.
+
+\subsection*{CWA}
+Closed World Assumption: All atomic forumlas of a state are assumed to be true, all other variable free atomic formulas are assumed to be false.
+
+\subsection*{DCA}
+Domain Closure Assumption: All objects in the domain are denoted by constants.
+
+\subsection*{UNA}
+Unique Name Assumption: Different constants denote different objects.
+
+\section{How do we get from operators to actions?}
+Actions are ground-instances of operators. That means we replace every variable in the arguments/preconditions/effects with variable-free (ground) literals, i.e. constants.
+
+\section{What is a (solution-) plan?}
+A plan is a sequence of actions $(a_1, \ldots, a_k)$. A solution plan is a plan which leads to a goalstate. To be more exact: A plan is a solution to a planning problem ($S, s_init, c_goal)$ iff there are states $s_1, \ldots, s_k$ such that
+\begin{enumerate}
+\item $a_i$ is applicable in $s_{i-1}$ and leads to state $s_i$ for $i = 1, \ldots, k$ and 
+\item $s_k$ satisfies goal conditions $c_goal$.
+\end{enumerate}
+
+\subsection*{Applicable}
+An action $a$ is applicable in state $s$ iff
+\begin{enumerate}
+\item all non-negated literals in the precondition of $a$ are contained in $s$ and
+\item no negated literal in the precondition of $a$ is contained in $s$.
+\end{enumerate}
+
+\section{What is state-space-planning?}
+\begin{itemize}
+
+\item nodes = states / sets of states of the domain
+\item edges = state transitions by actions
+\item plan = path in the state space
+\end{itemize}
+
+\section{How does regression work?}
+Regression Planning = Backwards Search in State Spaces. Instead of starting with the initial state, we could start with the goal description in order to add only "necessary" actions to a plan. Backwards Search does not work with states (sets of positive literals only) like forward search but with goals (set of positive and negative literals). Goals can be understood as partially definied states (CWA). The starting point of the Backwards Search ist the inverse of the state transition relation (weakest precondition). \ldots
+
+\section{How can we construct heuristic functions for A* search in forward planning?}
+Heuristics by simplified Models. 
+\begin{itemize}
+\item \textbf{Constraint Relaxation.} (Relaxation of a model is the removal of constraints that prohibit the use of operators. Cost of an optimum solution for a simplified problem can be used as an estimate for the optimum remaining cost.)
+\item \textbf{Overconstraining.} (Additional constraints, e.g. fixing the initial part of solution paths, results in less complex models. Solution cost for such a model can be used as upper bounds for $C^*$ (pruning).)
+\end{itemize}
+
+\section{Explain the partial-order-planning approach.}
+\ldots
+
 \end{document}
